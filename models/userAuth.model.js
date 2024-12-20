@@ -26,7 +26,7 @@ const UserAuth = {
                 }),
         });
 
-        return userAuthSchema.validate(user);  // abortEarly: false allows all validation errors to be collected
+        return userAuthSchema.validate(user);  
     },
 };
 

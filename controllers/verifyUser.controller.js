@@ -1,7 +1,7 @@
 const { verifyEmail } = require('../helpers/emailVerificationHelper');
 
 const verifyEmailController = async (req, res) => {
-  const { token } = req.params; // Extract token from the request URL
+  const { token } = req.params; 
 
   try {
     const result = await verifyEmail(token);

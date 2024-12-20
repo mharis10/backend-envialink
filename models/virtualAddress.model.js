@@ -7,19 +7,19 @@ const Joi = require("joi");
 const VirtualAddress = sequelize.define(
   "VirtualAddress",
   {
-    id: {  // Ensure the id column is explicitly defined if necessary
+    id: {  
       type: DataTypes.BIGINT,
       allowNull: false,
-      primaryKey: true, // Primary key for this model
+      primaryKey: true, 
       autoIncrement: true,
     },
     country: {
       type: DataTypes.STRING,
-      allowNull: false,  // Zimbabwe, Malawi, Mozambique
+      allowNull: false,  
     },
     country_address: {
       type: DataTypes.STRING,
-      allowNull: false,  // UK, US, China
+      allowNull: false,  
     },
     address1: {
       type: DataTypes.STRING,
@@ -46,12 +46,12 @@ const VirtualAddress = sequelize.define(
       allowNull: true,
     },
     note: {
-      type: DataTypes.STRING,  // Used for China addresses
-      allowNull: true,  // Optional for non-China addresses
+      type: DataTypes.STRING,  
+      allowNull: true,  
     },
     custom_text: {
-      type: DataTypes.STRING,  // Used for China addresses
-      allowNull: true,  // Optional for non-China addresses
+      type: DataTypes.STRING,  
+      allowNull: true,  
     },
   },
   {
@@ -63,7 +63,7 @@ const VirtualAddress = sequelize.define(
 );
 
 
-// Joi validation for Virtual Address
+
 function validateVirtualAddress(address) {
   const addressSchema = Joi.object({
     country: Joi.string().valid('Zimbabwe', 'Malawi', 'Mozambique').required(),
@@ -74,22 +74,22 @@ function validateVirtualAddress(address) {
     state: Joi.string().allow(null, '').max(100).optional(),
     phone: Joi.string().allow(null, '').max(20).optional(),
     zipcode: Joi.string().allow(null, '').max(20).optional(),
-    // Updated fields for Chinese addresses
+    
     note: Joi.string()
-      .allow(null, '') // Allow empty string or null
+      .allow(null, '') 
       .max(255)
       .when('country_address', {
         is: 'China',
-        then: Joi.required(), // Required only for China
-        otherwise: Joi.optional(), // Optional otherwise
+        then: Joi.required(), 
+        otherwise: Joi.optional(), 
       }),
     custom_text: Joi.string()
-      .allow(null, '') // Allow empty string or null
+      .allow(null, '') 
       .max(255)
       .when('country_address', {
         is: 'China',
-        then: Joi.required(), // Required only for China
-        otherwise: Joi.optional(), // Optional otherwise
+        then: Joi.required(), 
+        otherwise: Joi.optional(), 
       }),
   });
 

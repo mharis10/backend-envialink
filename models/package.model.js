@@ -6,12 +6,12 @@ const Joi = require("joi");
 
 const Package = sequelize.define("Package", {
     package_id: {
-        type: DataTypes.STRING(100), // Auto-generated package ID
+        type: DataTypes.STRING(100), 
         allowNull: false,
-        primaryKey: true,  // Primary key
+        primaryKey: true,  
     },
     client_id: {
-        type: DataTypes.STRING(10),  // Referencing user_id in User model
+        type: DataTypes.STRING(10),  
         references: {
             model: 'users',
             key: 'user_id',
@@ -20,15 +20,15 @@ const Package = sequelize.define("Package", {
     },
     sender: {
         type: DataTypes.STRING(100),
-        allowNull: false,  // Name of the sender
+        allowNull: false,  
     },
     warehouse: {
         type: DataTypes.STRING(100),
-        allowNull: false,  // The warehouse name where the package was received
+        allowNull: false,  
     },
     received_on: {
         type: DataTypes.DATE,
-        allowNull: false,  // Date package was received
+        allowNull: false,  
     },
     length: {
         type: DataTypes.FLOAT,
@@ -44,23 +44,23 @@ const Package = sequelize.define("Package", {
     },
     actual_weight: {
         type: DataTypes.FLOAT,
-        allowNull: false,  // Actual weight of the package
+        allowNull: false,  
     },
     billed_weight: {
         type: DataTypes.FLOAT,
-        allowNull: false,  // Billed weight (may be rounded)
+        allowNull: false,  
     },
     incoming_tracking_number: {
         type: DataTypes.STRING(100),
-        allowNull: true,  // Tracking number for incoming package
+        allowNull: true,  
     },
     storage_left: {
-        type: DataTypes.INTEGER,  // Days remaining for storage
+        type: DataTypes.INTEGER,  
         allowNull: false,
-        defaultValue: 30,  // Default storage left is 30 days
+        defaultValue: 30,  
     },
     images: {
-        type: DataTypes.JSON,  // Store images as URLs or base64
+        type: DataTypes.JSON,  
         allowNull: true,
     },
     shipping_cost: {
@@ -72,19 +72,19 @@ const Package = sequelize.define("Package", {
     },
     status: {
         type: DataTypes.STRING(50),
-        allowNull: false,  // Status of the package (e.g., 'received', 'shipped')
-        defaultValue: 'Fill Customs Form',  // Default status is 'received'
+        allowNull: false,  
+        defaultValue: 'Fill Customs Form',  
     },
 }, {
     sequelize,
     modelName: "Package",
     tableName: "packages",
-    timestamps: true,  // Enable timestamps for createdAt and updatedAt fields
+    timestamps: true,  
     updatedAt: "updated_at",
     createdAt: "created_at",
 });
 
-// Joi validation for Package
+
 function validatePackage(package) {
     const packageSchema = Joi.object({
         client_id: Joi.string().max(10).required(),
@@ -97,8 +97,8 @@ function validatePackage(package) {
         actual_weight: Joi.number().required(),
         billed_weight: Joi.number().required(),
         incoming_tracking_number: Joi.string().max(100).optional(),
-        storage_left: Joi.number().default(30),  // Default to 30 days
-        images: Joi.array().items(Joi.string()).optional(),  // Array of image URLs or base64
+        storage_left: Joi.number().default(30),  
+        images: Joi.array().items(Joi.string()).optional(),  
         shipping_cost: Joi.number().allow(null).empty('').optional(),
         status: Joi.string().valid('Fill Customs Form', 'Ready To Ship', 'Request Photo', 'Processing Your Shipment').default('Fill Customs Form'),
     });

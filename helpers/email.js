@@ -9,13 +9,13 @@ exports.sendVerificationEmail = (user, verificationToken) => {
 
   emailSubject = 'Email Verification for Your Account';
 
-  // Read the email template for verification
+  
   const template = fs.readFileSync(
     './emailTemplates/accountVerification.html',
     'utf-8'
   );
 
-  // Replace placeholders with dynamic data
+  
   emailTemplate = template.replace('{{full_name}}', user.full_name)
     .replace('{{verification_link}}', `${process.env.CLIENT_URL}/api/verify-email?token=${verificationToken}`);
 
@@ -27,7 +27,7 @@ exports.sendVerificationEmail = (user, verificationToken) => {
     html: emailTemplate,
   };
 
-  // Send the email
+  
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error(`Error occurred while sending the email: ${error}`);

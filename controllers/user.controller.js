@@ -7,7 +7,7 @@ const {
 } = require("../models/user.model");
 const UserAuth = require('../models/userAuth.model');
 const { sendVerificationEmail } = require('../helpers/email')
-const { generateEmailVerificationToken } = require('../helpers/authHelper');  // Adjust path as needed
+const { generateEmailVerificationToken } = require('../helpers/authHelper');  
 const {
     UserVirtualAddress,
     validateUserVirtualAddress,
@@ -22,11 +22,11 @@ function generateThreeLetterCode(counter) {
     const letters = [];
 
     while (letters.length < 3) {
-        letters.push(alphabet[counter % 26]); // Get the letter for the current position
-        counter = Math.floor(counter / 26); // Move to the next significant position
+        letters.push(alphabet[counter % 26]); 
+        counter = Math.floor(counter / 26); 
     }
 
-    return letters.reverse().join(''); // Reverse to get the correct order
+    return letters.reverse().join(''); 
 }
 
 
@@ -34,38 +34,38 @@ const userController = {
     registerUser: async (req, res) => {
         const { full_name, email, phone, is_admin, country, password } = req.body;
 
-        // Validate the input data
+        
         const { error } = validateUser(req.body);
         if (error) {
             return res.status(httpStatus.BAD_REQUEST).json({ error: error.details[0].message });
         }
 
-        // Check if the user already exists in the database
+        
         const existingUser = await User.findOne({ where: { email } });
 
         if (existingUser) {
             if (existingUser.is_active) {
-                // User is already verified
+                
                 return res.status(httpStatus.CONFLICT).json({ error: "User already registered" });
             }
 
-            // User exists but is not verified, update their details
+            
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
 
-            // Generate a new verification token
+            
             const verificationToken = generateEmailVerificationToken();
 
-            // Update the user's details
+            
             existingUser.full_name = full_name;
             existingUser.phone = phone;
             existingUser.country = country;
-            existingUser.password = hashedPassword; // Update with the new password
+            existingUser.password = hashedPassword; 
             existingUser.verification_token = verificationToken;
 
             await existingUser.save();
 
-            // Resend the verification email
+            
             sendVerificationEmail(existingUser, verificationToken);
 
             return res.status(httpStatus.OK).json({
@@ -73,14 +73,14 @@ const userController = {
             });
         }
 
-        // Hash the password
+        
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Generate a verification token
+        
         const verificationToken = generateEmailVerificationToken();
 
-        // Create a new unverified user
+        
         const newUser = await User.create({
             full_name,
             email,
@@ -88,11 +88,11 @@ const userController = {
             phone,
             is_admin,
             country,
-            is_active: false, // User is inactive until verification
+            is_active: false, 
             verification_token: verificationToken,
         });
 
-        // Send the verification email
+        
         sendVerificationEmail(newUser, verificationToken);
 
         return res.status(httpStatus.CREATED).json({
@@ -227,7 +227,7 @@ const userController = {
 
     getAllUsers: async (req, res) => {
         try {
-            // Fetch all users excluding sensitive fields
+            
             const allUsers = await User.findAll({
                 attributes: { exclude: ["password", "verification_token"] },
             });
@@ -244,12 +244,12 @@ const userController = {
 
     searchAllUsers: async (req, res) => {
         try {
-            const { query } = req.query; // Get the query parameter from the request
+            const { query } = req.query; 
 
-            // Check if a search query is provided
+            
             const whereCondition = query
                 ? {
-                    // Filter by name or email containing the query string (case-insensitive)
+                    
                     [Op.or]: [
                         { name: { [Op.iLike]: `%${query}%` } },
                         { email: { [Op.iLike]: `%${query}%` } },
@@ -257,10 +257,10 @@ const userController = {
                 }
                 : {};
 
-            // Fetch filtered users, excluding sensitive fields
+            
             const allUsers = await User.findAll({
                 attributes: { exclude: ["password", "verification_token"] },
-                where: whereCondition, // Apply the filter condition
+                where: whereCondition, 
             });
 
             res.status(httpStatus.OK).json({

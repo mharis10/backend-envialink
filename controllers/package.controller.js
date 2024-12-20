@@ -83,13 +83,13 @@ const packageController = {
     },
     getAllPackages: async (req, res) => {
         try {
-            // Fetch packages along with user details
+            
             const allPackages = await Package.findAll({
                 include: [
                     {
-                        model: User, // Assuming 'User' is the model for the users table
-                        attributes: ['full_name'], // Fetch only the 'name' field from the User model
-                        as: 'client', // Alias if defined in associations
+                        model: User, 
+                        attributes: ['full_name'], 
+                        as: 'client', 
                     },
                 ],
             });

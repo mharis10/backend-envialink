@@ -1,4 +1,4 @@
-const { User } = require('../models/User');  // Adjust path if needed
+const { User } = require('../models/User');  
 const httpStatus = require('http-status-codes').StatusCodes;
 
 async function verifyEmail(token) {
@@ -7,14 +7,14 @@ async function verifyEmail(token) {
   }
 
   try {
-    // Find the user with the verification token
+    
     const user = await User.findOne({ where: { verification_token: token } });
 
     if (!user) {
       throw new Error('Invalid token or user not found');
     }
 
-    // Activate the user and clear the verification token
+    
     user.is_active = true;
     user.verification_token = null;
     await user.save();

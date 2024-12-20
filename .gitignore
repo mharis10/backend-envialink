@@ -1,0 +1,12 @@
+# Node modules directory
+node_modules/
+
+uploads/
+
+# Environment files
+.env
+
+# NPM package lock file
+package-lock.json
+
+
